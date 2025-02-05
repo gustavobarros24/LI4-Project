@@ -1,0 +1,103 @@
+﻿@page "/orders/queued/{orderID:int}/sets"
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+@using DataAccess
+@using Models
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<PageTitle>Queued Order @OrderID</PageTitle>
+
+<h1>Queued Order @OrderID <div class=line></div> </h1>
+
+
+@if (!orderDAO.CheckIfQueuedByUser(OrderID, authUserId))
+{
+    <p>You can't examine this order. If it exists, you either didn't queue it or it's already been fulfilled.</p>
+}
+else
+{
+
+    @if (sets.Count() == 0)
+    {
+        <p><em></em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">SetID</th>
+                    <th>Name</th>
+                    <th>Manual Pages</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var set in sets)
+                {
+                    <tr>
+                        <td>@set.Id.ToString()</td>
+                        <td>@set.Name</td>
+                        <td>@set.ManualPages.Count().ToString()</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => ManualsPages(set)">Manual</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary" @onclick="FinishOrder">Mark as Finished</button>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public int OrderID { get; set; }
+
+    private int authUserId = 0;
+    private SetDAO setDAO = SetDAO.GetInstance();
+    private OrderDAO orderDAO = OrderDAO.GetInstance();
+
+    private List<Set> sets = new();
+
+    private void FinishOrder()
+    {
+        orderDAO.Finish(OrderID);
+		NavigationManager.NavigateTo("/orders/queued");
+    }
+
+    private async Task GetAuthUserAsync()
+    {
+        ClaimsPrincipal? user;
+
+        // Get the current authentication state
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        // Try to parse the username as an integer
+        if (user?.Identity?.IsAuthenticated == true && int.TryParse(user.Identity.Name, out var userId))
+        {
+            authUserId = userId;
+        }
+        else
+        {
+            authUserId = -1; // If parsing fails or user is not authenticated
+        }
+    }
+
+    private void ManualsPages(Set set)
+    {
+        NavigationManager.NavigateTo($"/sets/{set.Id}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAuthUserAsync();
+		sets = (List<Set>) setDAO.GetAllFromOrder(OrderID);
+    }
+}

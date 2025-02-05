@@ -1,0 +1,148 @@
+/* Hero Section Container */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Remove scrollbars from the entire page */
+    height: 100%; /* Ensure the body and html fill the viewport */
+}
+
+.shiny-hero-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure it fills the entire viewport height */
+    min-width: 100vw; /* Ensure it fills the entire viewport width */
+    background: linear-gradient(120deg, #1e3c72, #2a5298); /* Deep blue gradient */
+    color: #ffffff;
+    text-align: center;
+    padding: 1rem;
+    overflow: hidden; /* Prevent scrolling */
+    position: relative;
+    box-sizing: border-box; /* Ensure padding is included in dimensions */
+}
+
+/* Subtle animated gradient glow background */
+.shiny-hero-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent 70%);
+    animation: shiny-bg-move 10s infinite linear;
+    z-index: 0;
+}
+
+/* Content Wrapper */
+.shiny-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    animation: fadeIn 2s ease-out; /* Fade-in animation for smooth entry */
+}
+
+/* Title and Subtitle */
+.shiny-hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #ffffff;
+    background: linear-gradient(90deg, #ffdd00, #ff7e5f, #ffdd00);
+    background-size: 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shiny-text 3s infinite linear; /* Shiny text effect */
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.shiny-hero-subtitle {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Shiny Button */
+.shiny-btn {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    background-size: 200%;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3), 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: shiny-button 3s infinite linear;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.shiny-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.5), 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Animations */
+
+/* Background Glow Animation */
+@keyframes shiny-bg-move {
+    0% {
+        transform: translate(0, 0) rotate(0);
+    }
+    100% {
+        transform: translate(50%, 50%) rotate(360deg);
+    }
+}
+
+/* Shiny Text Animation */
+@keyframes shiny-text {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 200%;
+    }
+}
+
+/* Shiny Button Animation */
+@keyframes shiny-button {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 200%;
+    }
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .shiny-hero-title {
+        font-size: 3rem;
+    }
+
+    .shiny-hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .shiny-btn {
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
+    }
+}

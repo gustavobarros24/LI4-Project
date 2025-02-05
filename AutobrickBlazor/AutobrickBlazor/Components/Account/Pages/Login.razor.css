@@ -1,0 +1,138 @@
+/* Layout and container styles */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    height: 90vh;
+    padding: 2rem;
+    border-radius: 30px;
+}
+
+.login-card {
+    flex: 1;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.login-card-big {
+    display: flex;
+    align-items: center;
+    background: #80C4E9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    height: 60%;
+    border-radius: 30px;
+    max-width: 1100px;
+    width: 100%;
+    gap: 1rem;
+}
+
+.logo {
+    max-width: 400px;
+    margin-bottom: 0.5rem;
+}
+
+.login-card-big img {
+    flex: 1;
+    max-width: 90%;
+    padding-left: 3rem;
+}
+
+.brand-name {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-top: 0;
+    text-align: center;
+}
+
+
+/* Titles and text */
+.login-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: #6A4BD9;
+}
+
+.login-subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Form styles */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-floating label {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.input-text {
+    border-radius: 8px;
+    font-size: 1rem;
+    padding: 0.75rem;
+}
+
+.text-danger {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Buttons */
+.btn {
+    float: right;
+    padding: 0.75rem;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #5fb7e7;
+    border: none;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #4cabdf;
+}
+
+.btn-block {
+    width: 30%;
+}
+
+/* Error message */
+.error-message {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 1.5rem;
+    }
+
+    .login-title {
+        font-size: 1.8rem;
+    }
+}

@@ -1,0 +1,20 @@
+﻿@page "/"
+@using AutobrickBlazor.Components.Layout
+@layout HomeLayout
+
+<PageTitle>Home</PageTitle>
+
+<div class="shiny-hero-container">
+    <div class="shiny-hero-content">
+        <h1 class="shiny-hero-title">🧱 Autobrick 🧱</h1>
+        <p class="shiny-hero-subtitle">Have a good day!</p>
+        <AuthorizeView>
+            <Authorized>
+                <a href="/sets" class="shiny-btn">Welcome</a>
+            </Authorized>
+            <NotAuthorized>
+                <a href="/account/login" class="shiny-btn">Welcome</a>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</div>

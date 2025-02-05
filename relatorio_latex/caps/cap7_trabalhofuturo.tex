@@ -1,0 +1,48 @@
+%==========================================================================
+% BEGIN #7 - CONCLUSOES E TRABALHO FUTURO
+% Breve abordagem crítica ao trabalho realizado nesta primeira etapa, referindo aspetos positivos e negativos que acharem dignos de realce, acompanhada, quando necessário, com a exposição de algumas linhas de orientação para trabalho futuro com vista à correção ou melhoramento de tudo aquilo que foi realizado nesta primeira parte do trabalho.
+%==========================================================================
+
+\chapter{Conclusões e Trabalho Futuro}
+
+    \section{Conclusão}
+
+        Ao longo das diferentes fases concretizadas, desde a contextualização inicial até à implementação, identificámos um conjunto de detalhes dignos duma análise \textit{a posteriori}.
+         
+        Entre os aspetos mais positivos, há particular orgulho no levantamento e análise de requisitos, que possibilitou um estabelecimento e discernimento afinado e rigoroso das funcionalidades pretendidas.
+        
+        Foram feitas várias reformulações e correções ao longo do projeto. A de maior magnitude deu-se na inicial existência duma conta de administrador que, para além de herdar os casos de uso dirigidos ao utilizador normal, seria capaz do caso de uso de edição de quantidades disiponíveis das peças no inventário. Dado que o sistema é orientado a um único cargo de trabalho e só haveria esta operação como diferença, usou-se antes a estratégia mais "ligeira" de deixá-la acessível a todos os utilizadores, porém atrás duma senha administrativa.
+        
+        Uma outra, relacionada com o relatório, foi a primeira interpretação como objetivos do sistema (ver subcapítulo 1.3) os pontos enumerados atualmente na justificação do sistema (ver subcapítulo 1.5), e a maquete inicial foi substituída por uma que melhor representa o funcionamento pretendido, dando pistas sobre tanto as camadas de dados como as de lógica e apresentação.
+
+        Com o decorrer da implementação foi necessária a revisão e atualização da base de dados.
+
+        Foi decidido ainda com concordância dos clientes, mudar um pouco a interface e apresentação do programa para eliminar burocracias, tornar o design mais compacto, e garantir uma maior produtividade e simplificação da utilização da aplicação para oferecer um maior workflow.
+        
+        Olhando para trás, reconheceu-se que a funcionalidade de pedidos de inventário acrescentou complexidade não insignificante ao sistema. Poderia ter sido descartada sem pôr em causa o proposto no enunciado do projeto - no entanto, materializar essa alteração implicaria demasiado alagamento de trabalho anterior, especialmente na contextualização. 
+        
+        Houve uma certa omissão no diagrama de Gantt relativa a uma vistoria e emenda periódicas de tarefas previamente concluídas em prol da coerência de contexto. Foram efetuadas no âmbito das reuniões semanais. Não considerámos que tais atualizações fossem de significância cronológica suficiente para as mencionar na secção do planeamento.
+
+        Considerou-se que poderiam ter sido usados mais diagramas na fase de modelação, especialmente um de atividade, de modo a complementar os casos de uso elaborados. Foi algo que ficou por realizar por motivos logísticos.
+    
+    \section{Trabalho Futuro}
+
+        % cenas de possível acréscimo:
+        %% - segurança no armazenamento de senhas
+        %% - serviço de criação de encomendas, visto que a implementação atual só permite processamento das mesmas
+        %% - arquitetura mais modular:
+                %%% pondo a lógica de negócio em controladores de modo a fazer do back end uma API. isto permite mudanças radicais ao front end sem qualquer impacto em camadas abaixo
+                %%% estabelecendo subsistemas para melhor divisão de responsabilidades segundo o domínio e os requisitos estabelecidos
+        %% - documentação extensa de todas as classes e métodos 
+        
+        A título de acréscimo futuro à atual implementação, são pertinentes os seguintes serviços e melhorias:
+        \begin{itemize}
+            \item Segurança no armazenamento de contas. O sistema atual é meramente prova de conceito, visto que as senhas são guardadas em pleno texto ao invés de ser usada encriptação.
+            \item Serviço de receção de encomendas. No seu estado atual o sistema apenas serve para processamento de encomendas colocadas pela gestão na base de dados. Seria pertinente a implementação dum mecanismo que conseguisse gerar encomendas a partir dum formato padrão.
+            \item Arquitetura mais modular. A lógica de negócio poderia ser completamente transferida para controladores dedicados, separados pelos subsistemas indiciados na especificação da aplicação e enviando objetos de transferência de dados (DTOs) ao \textit{front end}. Isto permitiria ao \textit{back end} ser completamente independente da camada de apresentação, possibilitando até reformulações fundamentais dela sem grande impacto abaixo na cadeia.
+            \item Documentação extensa de todas as classes e métodos desenvolvidos.
+        \end{itemize}
+        
+%==========================================================================
+% END #7 - CONCLUSOES E TRABALHO FUTURO
+%==========================================================================

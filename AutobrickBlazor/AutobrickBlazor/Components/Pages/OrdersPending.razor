@@ -1,0 +1,187 @@
+﻿@page "/orders/pending"
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+@using DataAccess
+@using Models
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Pending Orders</PageTitle>
+
+<h1>Pending Orders <div class=line></div> </h1>
+
+
+@if (ordersPendingVM.Count() == 0)
+{
+    <p><em></em></p>
+}
+else
+{
+    <table class="table" style="table-layout: fixed; width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 10%;">OrderID</th>
+                <th style="width: 20%;">Fulfillable</th>
+                <th style="width: 40%;">Sets</th>
+                <th style="width: 30%;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in ordersPendingVM)
+            {
+                <tr>
+                    <td>@order.Id.ToString()</td>
+                    <td><span class="@ColourByBoolResult(order.isFulfillable)">@((order.isFulfillable ? "Yes" : "Pieces Missing!"))</span></td>
+                    <td>@(new MarkupString(String.Join("<br>", order.SetNames)))</td>
+                    <td>
+                        @if (order.isFulfillable)
+                        {
+                            <button class="btn btn-primary" @onclick="() => AddToQueue(order)">Add to Queue</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger" @onclick="() => Reject(order)">Reject</button>
+                            <button class="btn btn-warning" @onclick="() => RequestRestock(order)">Restock</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private OrderDAO orderDAO = OrderDAO.GetInstance();
+    private PieceDAO pieceDAO = PieceDAO.GetInstance();
+
+    private int authUserId = 0;
+
+    private Dictionary<int, Order> ordersPending = new();
+    private List<OrderViewModel> ordersPendingVM = new();
+
+    /// Formatting
+
+    private string ColourByBoolResult(bool value)
+    {
+        return value ? "text-success" : "text-danger";
+    }
+
+    /// Button Actions
+
+    private void RequestRestock(OrderViewModel orderVM)
+    {
+        Console.WriteLine($"Order {orderVM.Id} about to request restock by {authUserId}.");
+        // Perform the restock logic
+        if (ordersPending.TryGetValue(orderVM.Id, out var order))
+        {
+            orderDAO.RestockMissingPieceQuantities(order.Id);
+            // Re-fetch all pending orders
+            GetOrdersPending();
+        }
+    }
+
+    private void Reject(OrderViewModel orderVM)
+    {
+        Console.WriteLine($"Order {orderVM.Id} about to be rejected by {authUserId}.");
+        orderDAO.Remove(orderVM.Id);
+        GetOrdersPending();
+    }
+
+    private void AddToQueue(OrderViewModel orderVM)
+    {
+        Console.WriteLine($"Order {orderVM.Id} about to be processed by {authUserId}.");
+
+        // Perform the processing logic
+        if (ordersPending.TryGetValue(orderVM.Id, out var order))
+        {
+            // Pass the order and authenticated user ID to the DAO
+            orderDAO.PutInQueue(order, authUserId);
+
+            GetOrdersPending();
+        }
+    }
+
+    /// Data Fetching
+    private void GetOrdersPending()
+    {
+        ordersPending = orderDAO.GetAllPending().ToDictionary(order => order.Id);
+
+        foreach (var order in ordersPending.Values)
+            order.IsFulfillable = orderDAO.CheckIfFulfillable(order);
+
+        // Regenerate the ViewModel list
+        ordersPendingVM = OrderViewModel.FromOrders(ordersPending.Values
+            .OrderBy(order => order.Id)
+            .ToList());
+    }
+
+    private async Task GetAuthUserAsync()
+    {
+        ClaimsPrincipal? user;
+
+        // Get the current authentication state
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        // Try to parse the username as an integer
+        if (user?.Identity?.IsAuthenticated == true && int.TryParse(user.Identity.Name, out var userId))
+        {
+            authUserId = userId;
+        }
+        else
+        {
+            authUserId = -1; // If parsing fails or user is not authenticated
+        }
+    }
+
+    /// On initialization
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAuthUserAsync();
+        ordersPending = orderDAO.GetAllPending()
+                                .ToDictionary(order => order.Id);
+
+        foreach (var order in ordersPending.Values)
+        {
+            order.IsFulfillable = orderDAO.CheckIfFulfillable(order);
+        }
+
+        // Generate the ViewModel list
+        ordersPendingVM = OrderViewModel.FromOrders(ordersPending.Values
+            .OrderBy(order => order.Id)
+            .ToList());
+    }
+
+    /// View Models
+
+    private class OrderViewModel
+    {
+        public int Id { get; set; }
+        public List<string> SetNames = new();
+        public bool isFulfillable;
+
+        public OrderViewModel(Order order)
+        {
+            Id = order.Id;
+            isFulfillable = order.IsFulfillable;
+            foreach (var set in order.Sets)
+            {
+                SetNames.Add(set.Name);
+            }
+        }
+
+        public static List<OrderViewModel> FromOrders(List<Order> orders)
+        {
+            List<OrderViewModel> viewModels = new();
+            foreach (var order in orders)
+            {
+                viewModels.Add(new OrderViewModel(order));
+            }
+            return viewModels;
+        }
+    }
+}

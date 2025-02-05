@@ -1,0 +1,82 @@
+@page "/sets/{setID:int}"
+@rendermode InteractiveServer
+
+@using DataAccess
+
+<div tabindex="0" @onkeydown="HandleKeyDown" 
+     style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+    <button @onclick="ShowPrevious" 
+            style="background-color: transparent; border: none; cursor: pointer; margin-right: 15px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 40px; height: 40px; color: #555; transition: color 0.3s ease;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+    </button>
+
+    <img src="@Images[CurrentIndex]" alt="Image Carousel" 
+     style="max-width: 700px; max-height: 700px; width: auto; height: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;" />
+
+    <button @onclick="ShowNext" 
+            style="background-color: transparent; border: none; cursor: pointer; margin-left: 15px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 40px; height: 40px; color: #555; transition: color 0.3s ease;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+    </button>
+</div>
+
+<p style="text-align: center; font-family: 'Poppins', sans-serif; font-size: 18px; color: #777; margin-top: 15px;">
+    Image @(@CurrentIndex + 1) of @Images.Count
+</p>
+
+<div style="display: flex; justify-content: flex-end; margin-top: 25px; padding-right: 20px;">
+    <button @onclick="GoToSetsPage" 
+            style="background-color: #0078ff; color: white; padding: 10px 25px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Poppins', sans-serif; font-size: 16px; transition: background-color 0.3s ease, transform 0.2s ease;">
+        Go to Sets
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public int SetID { get; set; }  // Parâmetro vindo da rota
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+    private List<string> Images = new();
+    private int CurrentIndex = 0;
+
+    private SetDAO setDAO = SetDAO.GetInstance();
+    protected override async Task OnInitializedAsync(){
+        Images = setDAO.GetSetManual(SetID);
+        for (int i = 0; i < Images.Count; i++)
+        {
+            Images[i] = $"Components/Images/{Images[i]}"; // Adicionar o caminho relativo
+        }
+    }
+    
+    private void ShowNext()
+    {
+        // Increment the index, wrap around to the beginning if at the end
+        CurrentIndex = (CurrentIndex + 1) % Images.Count;
+    }
+
+    private void ShowPrevious()
+    {
+        // Decrement the index, wrap around to the end if at the beginning
+        CurrentIndex = (CurrentIndex - 1 + Images.Count) % Images.Count;
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "ArrowRight") // Right arrow key
+        {
+            ShowNext();
+        }
+        else if (e.Key == "ArrowLeft") // Left arrow key
+        {
+            ShowPrevious();
+        }
+    }
+
+    private void GoToSetsPage()
+    {
+        Navigation.NavigateTo("/sets");
+    }
+}

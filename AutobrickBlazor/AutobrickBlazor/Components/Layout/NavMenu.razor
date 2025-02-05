@@ -1,0 +1,83 @@
+﻿@using System.Security.Claims
+@using DataAccess
+@using Models
+
+<div id="nav">
+    <div class="navbar">
+        <div class="navbar-links-left"></div>
+            <img src="Components/Images/AutobrickLogo.png" alt="Autobrick Logo" class="autobrick" />
+            <a class="navbar-brand" href="">Autobrick®</a>
+
+        <!-- Left Aligned Navigation Links -->
+            <AuthorizeView>
+                <Authorized>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="orders/pending">
+                            <div class="line"></div>
+                            <img src="Components/Images/Encomendas.png" alt="Pending Orders" class="nav-img" />                          
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="orders/queued">
+                            <div class="line"></div>
+                            <img src="Components/Images/Queue.png" alt="Queued Orders" class="nav-img" />
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="sets">
+                            <div class="line"></div>
+                            <img src="Components/Images/Instructions Icon.png" alt="Sets" class="nav-img" />
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="pieces">
+                            <div class="line"></div>
+                            <img src="Components/Images/Stock.png" alt="Inventário" class="nav-img" />
+                        </NavLink>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+
+        <!-- Right Aligned User Section -->
+        <div class="navbar-links-right">
+            <AuthorizeView>
+                <Authorized>
+                    <div class="nav-item">
+                        <span class="navbar-text welcome-box">Welcome, @authenticatedUser?.Name</span>
+                    </div>
+                    <div class="nav-item">
+                        <form action="Account/Logout" method="get" class="d-inline">
+                            <button type="submit" class="nav-link btn btn-link p-0">Log out</button>
+                        </form>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <div class="nav-item">
+                        <a href="/account/login" class="btn btn-link nav-link bigger-button">Log in</a>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+</div>
+
+@code {
+    private int? authenticatedUserId;
+    private User? authenticatedUser;
+    UserDAO userDAO = UserDAO.GetInstance();
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.Name);
+        if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+        {
+            authenticatedUserId = userId;
+            authenticatedUser = userDAO.GetById(userId);
+        }
+    }
+}

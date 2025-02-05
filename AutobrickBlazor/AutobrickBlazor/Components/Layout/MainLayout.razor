@@ -1,0 +1,40 @@
+﻿@inherits LayoutComponentBase
+@using System.Security.Claims
+@using DataAccess
+@using Models
+@using AutobrickBlazor.Components.Layout
+
+<div class="page">
+
+        <main>
+            <NavMenu />
+            <div class="content-wrapper">
+            @Body
+            </div>
+        </main>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    private int? authenticatedUserId;
+    private User? authenticatedUser;
+    UserDAO userDAO = UserDAO.GetInstance();
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.Name);
+        if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+        {
+            authenticatedUserId = userId;
+            authenticatedUser = userDAO.GetById(userId);
+        }
+    }
+}

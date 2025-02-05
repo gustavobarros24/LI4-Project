@@ -1,0 +1,58 @@
+﻿@page "/sets"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@using Models
+@using DataAccess
+
+@inject NavigationManager NavigationManager
+
+<PageTitle>Sets</PageTitle>
+<div class = pageBG>
+<h1>Set Index <div class=line></div></h1>
+
+
+@if (sets.Count() == 0)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">Set ID</th>
+                <th style="width: 20%;">Manual Page Count</th>
+                <th style="width: 40%;">Name</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var set in sets)
+            { 
+                <tr>
+                    <td>@set.Id.ToString()</td>
+                    <td>@set.ManualPages.Count().ToString()</td>
+                    <td>@set.Name</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ManualsPages(set)">Manual</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+</div>
+
+@code {
+    private List<Set> sets = new();
+
+    private void ManualsPages(Set set){
+        NavigationManager.NavigateTo($"/sets/{set.Id}");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        sets = SetDAO.GetInstance().GetAll()
+            .OrderBy(set => set.Id)
+            .ToList();
+    }
+}

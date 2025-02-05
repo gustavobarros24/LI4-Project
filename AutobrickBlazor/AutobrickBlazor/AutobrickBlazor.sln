@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutobrickBlazor", "AutobrickBlazor.csproj", "{778B040F-9329-47A7-99E1-F1DA69FE73FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "..\DataAccess\DataAccess.csproj", "{D5401A20-F03F-4BBA-981A-F49CDC38D01C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "..\Models\Models.csproj", "{B15E1816-6F55-46AF-BD03-471EFFD739D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{778B040F-9329-47A7-99E1-F1DA69FE73FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{778B040F-9329-47A7-99E1-F1DA69FE73FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{778B040F-9329-47A7-99E1-F1DA69FE73FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{778B040F-9329-47A7-99E1-F1DA69FE73FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5401A20-F03F-4BBA-981A-F49CDC38D01C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5401A20-F03F-4BBA-981A-F49CDC38D01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5401A20-F03F-4BBA-981A-F49CDC38D01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5401A20-F03F-4BBA-981A-F49CDC38D01C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B15E1816-6F55-46AF-BD03-471EFFD739D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B15E1816-6F55-46AF-BD03-471EFFD739D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B15E1816-6F55-46AF-BD03-471EFFD739D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B15E1816-6F55-46AF-BD03-471EFFD739D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

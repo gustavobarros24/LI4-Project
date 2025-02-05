@@ -1,0 +1,111 @@
+﻿@page "/orders/queued"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+@using DataAccess
+@using Models
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<PageTitle>Queued Orders</PageTitle>
+
+<h1>Queued Orders <div class=line></div> </h1>
+
+@if (ordersQueuedVM.Count() == 0)
+{
+    <p><em>You haven't queued any orders just yet.</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">OrderID</th>
+                <th style="width: 50%;">Sets</th>
+                <th style="width: 15%;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in ordersQueuedVM)
+            {
+                <tr>
+                    <td> @order.Id.ToString() </td>
+                    <td> @(new MarkupString(String.Join("<br>", order.SetNames))) </td>
+                    <td> <button class="btn btn-primary" @onclick="() => SeeSets(order)"> Fulfill </button> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private int authUserId = 0;
+    private OrderDAO orderDAO = OrderDAO.GetInstance();
+    private Dictionary<int, Order> ordersQueued = new();
+    private List<OrderViewModel> ordersQueuedVM = new();
+
+    private async Task GetAuthUserAsync()
+    {
+        ClaimsPrincipal? user;
+
+        // Get the current authentication state
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        // Try to parse the username as an integer
+        if (user?.Identity?.IsAuthenticated == true && int.TryParse(user.Identity.Name, out var userId))
+        {
+            authUserId = userId;
+        }
+        else
+        {
+            authUserId = -1; // If parsing fails or user is not authenticated
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAuthUserAsync();
+        
+        ordersQueued = orderDAO.GetAllQueuedByUser(authUserId)
+            .ToDictionary(order=>order.Id);
+		
+        ordersQueuedVM = OrderViewModel.FromOrders(
+            ordersQueued.Values
+            .ToList());
+    }
+
+	private void SeeSets(OrderViewModel orderVM)
+    {
+        // Perform the processing logic
+        if (ordersQueued.TryGetValue(orderVM.Id, out var order))
+        {
+            // Go to URL /orders/orderId/sets
+		    NavigationManager.NavigateTo($"/orders/queued/{order.Id}/sets");
+        }
+    }
+
+	private class OrderViewModel
+    {
+        public int Id { get; set; }
+        public List<string> SetNames = new();
+
+        public OrderViewModel(Order order)
+        {
+            Id = order.Id;
+            foreach (var set in order.Sets)
+            {
+                SetNames.Add(set.Name);
+            }
+        }
+
+        public static List<OrderViewModel> FromOrders(List<Order> orders)
+        {
+            List<OrderViewModel> viewModels = new();
+            foreach (var order in orders) viewModels.Add(new OrderViewModel(order));
+            return viewModels;
+        }
+    }
+    
+}

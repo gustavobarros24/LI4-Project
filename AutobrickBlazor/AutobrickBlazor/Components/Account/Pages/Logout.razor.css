@@ -1,0 +1,39 @@
+.logout-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 750px;
+    background-color: #f8f9fa;
+    margin: 0;
+}
+
+.logout-container {
+    text-align: center;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.logout-title {
+    font-size: 2rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.logout-message {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .logout-title {
+        font-size: 1.8rem;
+    }
+
+    .logout-message {
+        font-size: 1rem;
+    }
+}

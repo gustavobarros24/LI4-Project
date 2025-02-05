@@ -1,0 +1,93 @@
+﻿@page "/pieces"
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+@using Models
+@using DataAccess
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+
+<PageTitle>Piece Inventory</PageTitle>
+
+<h1>Pieces <div class=line></div> </h1>
+
+<button class="btn btn-primary" @onclick="RequestRestock">Restock Request</button>
+<div class="d-inline-block">
+    <button class="btn btn-primary" @onclick="AdminEditStock" disabled="@(string.IsNullOrEmpty(Input.Pin) || !IsPinCorrect)">Edit Stock</button>
+    <input type="text" class="form-control d-inline-block" style="width: auto; display: inline; margin-right: 10px;"
+           @bind="Input.Pin" placeholder="Enter PIN" />
+</div>
+
+@if (piecesWithStock.Count() == 0)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">PieceID</th>
+                <th style="width: 10%;">Stock</th>
+                <th style="width: 40%;">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var piece in piecesWithStock)
+            {
+                <tr>
+                    <td>@piece.Id.ToString()</td>
+                    <td>@($"x{piece.AmountInStock.ToString()}")</td>
+                    <td>@piece.Name.ToString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [SupplyParameterFromForm]
+    AdminPinInputViewModel Input { get; set; } = new AdminPinInputViewModel();
+
+    private UserDAO userDAO = UserDAO.GetInstance();
+    private List<Piece> piecesWithStock = new();
+
+    private bool IsPinCorrect => VerifyPin(Input.Pin);
+
+    private void RequestRestock()
+    {
+        NavigationManager.NavigateTo("/pieces/restockrequest");
+    }
+
+    private void AdminEditStock()
+    {
+        if (IsPinCorrect)
+        {
+            NavigationManager.NavigateTo("/pieces/editstock");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        piecesWithStock = PieceDAO.GetInstance().GetAllWithStock()
+            .OrderBy(piece => piece.Id)
+            .ToList();
+    }
+
+    private bool VerifyPin(string pin)
+    {
+        if (int.TryParse(pin, out int numericPin))
+        {
+            return userDAO.VerifyAdminPin(numericPin);
+        }
+        return false;
+    }
+
+    sealed class AdminPinInputViewModel
+    {
+        [Required(AllowEmptyStrings = false, ErrorMessage = "PIN cannot be empty.")]
+        [RegularExpression("^[0-9]+$", ErrorMessage = "PIN must be a numerical value.")]
+        [StringLength(10, MinimumLength = 1, ErrorMessage = "PIN must be between 1 and 10 characters.")]
+        public string Pin { get; set; }
+    }
+}

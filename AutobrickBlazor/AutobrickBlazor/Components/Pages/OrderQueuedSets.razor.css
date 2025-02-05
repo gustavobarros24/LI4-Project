@@ -1,0 +1,16 @@
+h1 {
+    font-size: 2rem;
+    color: #F39C12;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+h1 .line {
+    position: relative;
+    flex-grow: 1;
+    height: 1.2px;
+    width: 70%;
+    background-color: #F39C12;
+    margin-left: 300px;
+    top: -17px
+  }

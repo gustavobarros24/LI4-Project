@@ -1,0 +1,43 @@
+%==========================================================================
+% BEGIN LISTA DE SIGLAS E ACRÓNIMOS
+%==========================================================================
+
+%% Portuguese babel does not translate this environment
+\renewcommand{\nomname}{Lista de Siglas e Acrónimos}
+
+%% Text that can be shown before acronyms list
+\renewcommand{\nompreamble}{<<Apresentar uma lista com todas as siglas e acrónimos utilizados durante a realização do trabalho. O formato base para esta lista deverá ser da forma como abaixo se apresenta.>>}
+
+%% acronyms
+\nomenclature[01]{\textbf{BD}}{Base de Dados}
+\nomenclature[02]{DW}{Data Warehouse}
+\nomenclature[03]{OLTP}{On-Line Analytical Processing}
+\nomenclature[04]{...}{...}
+
+%% Show acronyms
+\printnomenclature
+
+
+
+%==========================================================================
+% END LISTA DE SIGLAS E ACRÓNIMOS
+%==========================================================================
+
+
+%==========================================================================
+% BEGIN ANEXOS
+%==========================================================================
+
+%% Why \addchap, instead of \chapter? 
+%% \addchap has no numbering but appears in table of contents.
+\addchap{Anexos}
+
+    <<Os anexos deverão ser utilizados para a inclusão de informação adicional necessária para uma melhor compreensão do relatório o para complementar tópicos, secções ou assuntos abordados. Os anexos criados deverão ser numerados e possuir uma designação. Estes dados permitirão complementar o Índice geral do relatório relativamente à enumeração e apresentação dos diversos anexos.>>
+    
+    %% section version of \addchap
+    \addsec{Anexo 1}
+
+
+%==========================================================================
+% END ANEXOS
+%==========================================================================

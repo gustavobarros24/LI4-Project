@@ -1,0 +1,31 @@
+﻿@using System.Security.Claims
+@using DataAccess
+@using Models
+@inherits LayoutComponentBase
+
+<div class="page">
+        <article class="content px-4">
+            @Body
+        </article>
+</div>
+
+
+
+@code {
+	private int? authenticatedUserId;
+    private User? authenticatedUser; 
+	UserDAO userDAO = UserDAO.GetInstance();
+
+	[CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.Name);
+        if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+        {
+            authenticatedUserId = userId;
+			authenticatedUser = userDAO.GetById(userId);
+		}
+    }
+}

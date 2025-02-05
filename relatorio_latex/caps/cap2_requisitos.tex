@@ -1,0 +1,159 @@
+%==========================================================================
+% BEGIN #2 - LEVANTAMENTO/ANALISE DOS REQUISITOS
+% Levantamento e redação dos requisitos do sistema a desenvolver, identificando de forma concreta e detalhada as funcionalidades (e restrições) que o sistema deverá ter de forma a satisfazer as necessidades apresentadas pelos seus promotores (stakeholders) e utilizadores. O processo de levantamento e de análise de requisitos constitui uma das partes mais importantes (senão a mais importante) de um projeto de engenharia de software.
+
+\newcommand{\freq}[3]{
+    \parbox{\dimexpr\textwidth-2em}{
+        \subsection{#1}
+        \begin{itemize}[left=1em]
+            \item \textbf{Definição:} #2
+            \item \textbf{Especificação:} #3
+        \end{itemize}
+    }
+}
+
+\newcommand{\nreq}[2]{
+    \parbox{\dimexpr\textwidth-2em}{
+        \subsection{#1 (N/ Funcional)}
+        \begin{itemize}[left=1em]
+            \item \textbf{Definição:} #2
+        \end{itemize}
+    }
+}
+
+
+%==========================================================================
+
+\chapter{Levantamento e Análise dos Requisitos}
+    
+    \section{Estratégia/Método de Levantamento}
+
+    O processo de levantamento de requisitos partiu de uma reunião com o diretor executivo, o contabilista e o representante de comunicação. Aqui, foram esclarecidos os principais pontos fracos relativos a reposições de inventário e receção de encomendas.
+    
+    De seguida, fez-se inquéritos ao nível da linha de montagem. Foram registadas as sugestões dos coordenadores de linha, visto este cargo ser o principal utilizador do sistema.
+    
+    Dada como concluída a recolha de preocupações dos utilizadores e dos \textit{stakeholders}, passou-se ao estudo das plataformas de gestão de linha de produção mais populares existentes no mercado. Esta etapa serviu para identificar características e mecanismos bem sucedidos e, portanto, passíveis de serem incluídos e/ou adaptados na nova plataforma a desenvolver.
+
+    Nas secções seguintes, dispõe-se os requisitos levantados organizados segundo os componentes abstratos traçados na maquete (figura~\ref{fig:maquete}), cujas justificações se encontrarão na descrição precedente. Os não funcionais estão devidamente sinalizados como tal.
+
+    \newpage
+    \section{Requisitos sobre Utilizadores}
+
+        Os requisitos seguintes partem das necessidades provenientes do componente de gestão de utilizadores. Este componente abrange operações que involvam consulta e/ou teste sobre as credenciais dos utilizadores registados. Isto implica a possibilidade de \underline{início de sessão} e respetivo \underline{fecho de sessão}. Adicionalmente, a conta correspondente à sessão atual \underline{deve ser visível}.
+        
+        \freq{Teste de Validade da Senha de Conta}
+            {O utilizador deve ser avisado se introduziu uma senha errada para o identificador de conta que especificou.}
+            {O sistema deve utilizar um registo de credenciais de modo a validar as tentativas de início de sessão por parte do utilizador.}
+
+        \freq{Autenticação / Início de Sessão na Aplicação}
+            {O utilizador deverá introduzir a sua credencial de acesso e password para iniciar sessão na aplicação.}
+            {O sistema deve validar a tentativa de autenticação verificando se o par credencial de acesso e password estão registados no sistema de armazenamento de dados.}
+    
+        \freq{Término de Sessão na Aplicação}
+            {O utilizador deve ser capaz de terminar a sua sessão após se autenticar.}
+            {O sistema termina a sessão do utilizador correspondente.}
+
+        \freq{Consultar Detalhes de Conta}
+            {O utilizador deve conseguir consultar o identificador da sua própria conta enquanto se encontra em sessão.}
+            {O sistema deve disponibilizar uma secção onde apresenta o identificador da conta de utilizador atualmente em sessão.}
+
+
+    \newpage
+    \section{Requisitos sobre Encomendas}
+
+        Uma encomenda recém chegada terá o seu estado definido como \underline{pendente} até que o utilizador a processe. Se houver luz verde na \underline{avaliação da viabilidade da encomenda} (ou seja, comparação das peças necessárias dela contra as disponíveis), o processar da encomenda corresponderá a \underline{colocá-la em fila de montagem}. No caso contrário, ela pode ser mantida como pendente até haver mais peças ou \underline{recusada}. 
+
+        \freq{Consultar Encomendas Pendentes}
+            {O utilizador deve ter um meio de consultar todas as encomendas recebidas que ainda não foram processadas.}
+            {O sistema deve manter uma lista das encomendas em estado pendente e apresentá-la ao utilizador.}
+
+        \freq{Avaliar Viabilidade de Encomenda}
+            {O utilizador, deve ser capaz de ver a viabilidade duma encomenda pendente. A viabilidade dependerá da existência de peças disponíveis em inventário suficientes para a montagem de todos os modelos requisitados por ela.}
+            {O sistema, dada uma encomenda pendente, deverá comparar as peças que o inventário tem contra as que ela implica por via dos modelos requisitados. Tal deve ser apresentado ao utilizador.}
+        
+        \freq{Recusar Encomenda Pendente}
+            {No caso de faltarem peças, o utilizador deve conseguir recusar uma encomenda pendente.}
+            {O sistema deve alterar o estado da encomenda para "recusada" e filtrá-la da lista de encomendas pendentes.}
+
+        \freq{Colocar Encomenda em Fila para Montagem}
+            {O utilizador deve conseguir colocar uma encomenda em fila para subsequente montagem, assumindo que ela é viável (i.e. pode ser concebida por completo com as peças disponíveis no inventário).}
+            {O sistema deverá verificar a viabilidade da encomenda. Isso implica confrontar as peças requeridas por cada modelo com as quantidades das mesmas existentes no inventário. Adicionalmente, isto assume que os modelos referidos na encomenda já estejam previamente registados.}
+
+        \freq{Consulta de Fila de Montagem}
+            {O utilizador deve conseguir visualizar todas as encomendas que previamente colocou em fila de montagem, pela respetiva ordem de colocação.}
+            {O sistema deve manter uma lista das encomendas em estado "em fila" e apresentá-la ao utilizador.}
+
+        \freq{Arrancar Fila de Montagem}
+            {O utilizador, dada uma fila de montagem povoada com pelo menos uma encomenda, deve poder arrancar com a montagem - i.e. ver ordenadamente, por cada encomenda na fila, as sequências de montagem correspondentes a cada modelo que ela requisita.}
+            {O sistema deverá, dada a ordem das encomendas em fila, estabelecer uma ordem para montagem dos modelos requisitados em cada encomenda individual.}
+
+        \freq{Confirmar Montagem de Modelo em Encomenda}
+            {O utilizador deve ser capaz de confirmar o final de montagem dum modelo requisitado numa encomenda. Isto dar-se-á ao concluir a visualização da sequência de montagem do mesmo.}
+            {Chegando ao fim da sequência de montagem, o sistema deve apresentar uma forma de sinalizar a conclusão de montagem do modelo. Isto conduzirá à apresentação do modelo seguinte ou à alteração do estado da encomenda para como "finalizada".}    
+
+        \nreq{Registos de Encomenda Eficientes}
+            {As encomendas devem estar armazenadas no sistema de tal forma que a operação sobre várias ocorra, no máximo, em tempo linear. Isto provém da garantia de escabilidade em que o desenvolvimento do sistema se baseou.}
+
+    \newpage        
+    \section{Requisitos sobre Inventário}
+
+        A avaliação de viabilidade duma encomenda pendente requer comparação com o atual inventário de peças, pelo que este deve ser acessível ao utilizador. Para além desta consulta, é vital que se consiga criar \underline{pedidos de reposição}, sejam estes \underline{manuais} (definidos pelo utilizador) ou \underline{automáticos} (com base nas peças em falta a uma encomenda avaliada como inviável).
+
+        \freq{Consultar Inventário}
+            {O utilizador deve conseguir consultar o inventário de peças disponíveis e respectivas quantidades.}
+            {O sistema deverá manter uma lista das peças e respetivas quantidades atualmente disponíveis.}
+
+        \freq{Realizar Pedido de Reposição Manual}
+            {O utilizador deve conseguir criar um pedido de reposição do inventário com peças e quantidades à sua própria escolha.}
+            {O sistema deve ter forma de criar e armazenar uma instância de pedido de reposição de peças com base na inserção direta do utilizador, para posterior acréscimo ao inventário.}   
+            
+        \freq{Gerar Pedido de Reposição Automático}
+            {O utilizador, ao processar uma encomenda inviável, deve ter a possibilidade de criar um pedido de reposição do inventário com as peças e quantidades correspondentes ao que está em falta.}
+            {O sistema deve ter forma de criar e armazenar uma instância de pedido de reposição de peças com base nas peças e quantidades que faltam a uma encomenda inviável, para posterior acréscimo ao inventário.}
+
+        \freq{(Administrativo) Editar Quantidade Disponível de Peça}
+            {O utilizador, em posse duma senha administrativa, deve ser capaz de alterar diretamente a quantidade disponível duma peça no inventário, sem ter de recorrer a pedido de reposição.}
+            {Dada uma senha administrativa, o sistema deverá disponibilizar a opção de alterar a quantidade disponível duma peça no inventário.}
+
+        \nreq{Consistência entre Pedido e Reposição}
+            {A cada pedido feito deve ser correspondido exatamente o número e formato de peças reposto no inventário. A única exceção parte da aplicação do requisito 2.4.4. Contudo, é de notar que este só existe para colmatar erros de fornecimento alheios ao sistema.}
+
+    \newpage
+    \section{Requisitos sobre Modelos}
+
+    A existência duma encomenda requer que tanto o sistema como o utilizador reconheçam cada modelo que ela requisita, de modo a saberem não só as \underline{peças necessárias} mas também qual \underline{manual de instruções a visualizar} durante a montagem.
+
+        \freq{Consultar Catálogo de Modelos}
+            {O utilizador deve ser capaz de consultar o catálogo de modelos disponíveis para produção.}
+            {O sistema deverá apresentar uma lista dos modelos disponíveis para produção.}
+
+        \freq{Visualizar Montagem de Modelo}
+            {O utilizador deve conseguir visualizar a sequência de montagem dum modelo, quer ordenadamente pela fila de encomendas a montar ou independentemente pelo catálogo de modelos.}
+            {O sistema deve ter associado a cada modelo a sua respetiva sequência de montagem, para ser apresentada seja pelo catálogo ou devido a uma encomenda de montagem em fila que o inclua.}
+
+        \nreq{Existência de Manual para Modelo}
+            {Deve-se absolutamente garantir que um modelo terá sempre um manual de instruções respetivo, pois a visualização da sequência de montagem é dos aspetos mais importantes do sistema.}
+
+    \newpage
+    \section{Requisitos Indiferenciados}
+
+    Especificam-se aqui requisitos não necessariamente enquadrados com nenhuma das componentes em que se subdividiu a maquete.
+
+        \freq{Interação Gráfica Baseada em Navegador \textit{Web}}
+            {O utilizador deve interagir com o sistema através duma interface gráfica desenvolvida no contexto dum navegador \textit{web}.}
+            {O sistema deverá ter estabelecida uma camada que estabeleça as suas operações dadas as interações que o utilizador tem com a interface gráfica que lhe é apresentada.}
+
+        \nreq{Compatibilidade da Interface Gráfica}
+            {A interface gráfica que é apresentada ao utilizador deverá ser, dentro do possível, o mais agnóstica possível quanto ao navegador em uso.}
+
+    \newpage
+    \section{Validação dos Requisitos Estabelecidos}
+
+    Depois de completado o processo de levantamento dos requisitos, passámos à análise dos mesmos, concluindo assim, em equipa, que se adequavam para o que era pretendido com o sistema de software a desenvolver.
+    Após este acordo entre a equipa de desenvolvimento, decidimos reunir com a administração e \textit{stakeholders} da BlocoPronto para serem apresentados a especificação dos requisitos. Depois de nos ser confirmado que os requisitos correspondiam às necessidades e expectativas dos mesmos, o processo de elaboração do software pôde continuar a decorrer com normalidade.
+    
+    %Com o intuito de ter a certeza de que o sistema corresponde exatamente ao esperado, foram feitas várias rondas de negociação sobre a mais recente (na altura) especificação dos requisitos. Isto permitiu que se evitassem repetições de informação, expressões vagas e mecanismos fora do objetivo a cumprir.%
+            
+%==========================================================================
+% END #2 - LEVANTAMENTO/ANALISE DOS REQUISITOS
+%==========================================================================

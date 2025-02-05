@@ -1,0 +1,33 @@
+﻿@page "/Account/Logout"
+@layout LogoutLayout
+
+@using AutobrickBlazor.Components.Layout
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Models;
+@using DataAccess;
+@using System.Security.Claims
+
+@inject NavigationManager navigationManager
+
+<header class="logout-header">
+    <div class="logout-container">
+        <h1 class="logout-title">Logged Out</h1>
+        <p class="logout-message">You have logged out successfully.</p>
+    </div>
+</header>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            navigationManager.NavigateTo("/Account/Logout");
+        }
+    }
+}

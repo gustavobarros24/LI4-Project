@@ -1,0 +1,185 @@
+\documentclass[a4paper,12pt]{scrreprt}
+    %% Used for changing geometry of the page
+    %% Cover page text cannot overlay cover sketching/style 
+    %% https://ctan.org/pkg/geometry?lang=en
+\usepackage{geometry}
+    %% Changes language of some packages protocols
+    %% e.g., when captioning images: Figure 1. -> Figura 1.
+    %% https://ctan.org/pkg/babel?lang=en
+\usepackage[portuguese]{babel}
+    %% Used for special fonts
+    %% Cannot be compiled with pdflatex
+    %% https://ctan.org/pkg/fontspec?lang=en
+\usepackage{fontspec}
+    %% Arial FONT
+    \setmainfont{Arial}
+
+\usepackage{comment}
+\usepackage{pgffor} % for the \foreach loop
+
+\usepackage{datetime}
+
+\usepackage{advdate}
+
+    %% More colors and color options
+    %% https://ctan.org/pkg/xcolor?lang=en
+    %% https://ctan.org/pkg/colortbl?lang=en
+\usepackage{xcolor,colortbl}
+    %% More tabular options, like dashed/dotted lines
+    %% https://ctan.org/pkg/arydshln?lang=en
+\usepackage{arydshln}
+    %% List of acronyms
+    %% https://ctan.org/pkg/nomencl?lang=en
+\usepackage[intoc]{nomencl}
+    %% Must be called to init nomencl environment  
+    \makenomenclature
+    %% More images options/settings
+    %% https://ctan.org/pkg/graphicx?lang=en
+\usepackage{graphicx}
+    %% Defining subdirectories to image path enviornment
+    %% \graphicspath{{sub1}{sub2}...{subN}}
+    \graphicspath{{images}}
+    
+    %% used to handle cross-referencing commands in LaTeX to produce hypertext links in the document
+    %% https://ctan.org/pkg/hyperref?lang=en
+\usepackage{hyperref}
+    %% math environments
+    %% https://ctan.org/pkg/amsmath?lang=en
+
+    %% settings
+    \hypersetup{
+        colorlinks,
+        citecolor=black,
+        filecolor=black,
+        linkcolor=black,
+        urlcolor=black
+    }
+
+\usepackage{amsmath}
+    %% Defining backgrouns, used to make the cover
+    %% https://ctan.org/pkg/background?lang=en
+\usepackage[some]{background}
+    %% Used to make drawings or complex graphics
+    %% http://pgf.sourceforge.net/pgf_CVS.pdf
+\usepackage{tikz}
+    %% Tikz library to point operations ((x1,y1) + (x2,y2))
+    \usetikzlibrary{calc}
+\usepackage{enumitem}
+
+\usepackage{graphicx}
+
+\usepackage[export]{adjustbox}
+
+\usepackage{comment}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{sharpc}{language=[Sharp]C, frame=lr, rulecolor=\color{blue!80!black}}
+
+
+%% Defining sfdefault font and default font for document
+\renewcommand{\familydefault}{\sfdefault}
+
+\setcounter{secnumdepth}{3}
+
+%% Costume made cover 
+%% From there you can use \makecover command to build the cover
+
+%==========================================================================
+% DOCUMENT
+%==========================================================================
+
+\begin{document}
+\include{cover}
+
+\pagenumbering{gobble}
+
+% builds the cover
+\makecover
+
+%% smaller footer and header size
+\newgeometry{top=3cm,left=3cm,right=3cm,bottom=4cm}
+
+%==========================================================================
+% BEGIN OPCIONAL DEDICATÓRIA
+%==========================================================================
+
+%==========================================================================
+% END OPCIONAL DEDICATÓRIA
+%==========================================================================
+
+
+%==========================================================================
+% BEGIN ABSTRACT PAGE
+%==========================================================================
+
+
+
+%% Abstract name: \Large font size, flushed left and paragraph skip before abstract content
+\renewenvironment{abstract}
+ {\par\noindent\textbf{\Large\abstractname}\par\bigskip}
+ {}
+
+\begin{flushleft}
+\begin{abstract}
+    
+    Neste relatório, documenta-se a primeira metade do processo de desenvolvimento coletivo duma plataforma de \textit{software} no âmbito da unidade curricular Laboratórios de Informática IV. Nesta foi proposto um programa que providenciasse uma forma de visualizar sequencialmente uma linha de produção em andamento, passo a passo.
+
+    Assim apresenta-se o \textit{Autobrick}, um sistema que seria assentado no departamento de montagem/produção da hipotética empresa cliente, BlocoPronto Lda, que prepara modelos/conjuntos LEGO por encomenda. O Autobrick auferiria à chefia do departamento não só a mera visualização proposta, mas também a conveniente automatização de operações que lhe precedem, ligadas à gestão de peças no inventário e de encomendas a conceber.
+    
+    \par \textbf{Área de Aplicação}: Gestão, Produção, Visualização de Assemblagem Manual 
+    \par \textbf{Palavras-Chave}: Bases de Dados Relacionais, SQL Server, Engenharia de Requisitos, Modelação Estrutural e Comportamental, UML, Casos de Uso, Interfaces Gráficos, .NET, C\#.
+    
+\end{abstract}
+\end{flushleft}
+
+
+\pagebreak
+
+%==========================================================================
+% END ABSTRACT PAGE 
+%==========================================================================
+
+%==========================================================================
+% BEGIN INDEXES PAGES
+%==========================================================================
+
+%% Changes table of content name
+%% Portuguese babel default : "Conteúdo"
+%% Personally I prefer "índice"
+\renewcommand{\contentsname}{Índice}
+
+\tableofcontents
+
+\pagebreak
+
+\listoffigures
+
+\pagebreak
+
+\listoftables
+
+\pagebreak
+
+%==========================================================================
+% END INDEXES PAGES 
+%==========================================================================
+
+
+%% Starting page numbering here
+\pagenumbering{arabic}
+\input{caps/cap1_introducao}
+\input{caps/cap2_requisitos}
+\input{caps/cap3_especificacao}
+\input{caps/cap4_basedados}
+\input{caps/cap5_mockups}
+\input{caps/cap6_implementacao}
+\input{caps/cap7_trabalhofuturo}
+
+
+
+\input{referencias}
+
+
+\end{document}

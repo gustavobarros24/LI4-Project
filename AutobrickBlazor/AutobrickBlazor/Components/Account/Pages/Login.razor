@@ -1,0 +1,92 @@
+﻿@page "/Account/Login"
+@layout GuestLayout
+
+@using AutobrickBlazor.Components.Layout
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Models;
+@using DataAccess;
+@using System.Security.Claims
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager navigationManager
+
+<div class="login-container">
+    <div class="login-card-big">
+        <div>
+            <img src="Components/Images/AutobrickLogo.png" alt="Autobrick Logo" />
+            <p class="brand-name">Autobrick<sup>®</sup></p>
+        </div>
+
+        <div class="login-card">
+            <h1 class="login-title">Olá, seja bem vindo!</h1>
+            <EditForm Model="@Input" OnValidSubmit="@Authenticate" FormName="LoginForm" class="login-form">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label for="Input.Id" class="form-label">Nome de utilizador</label>
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="Input.Id" id="Input.Id" class="form-control" aria-required="true" />
+                        <ValidationMessage For="() => Input.Id" class="text-danger small" />
+                    </div>
+                    <label for="Input.Password" class="form-label">Palavra-Passe</label>
+                    <div class="form-floating mb-3">
+                        <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" aria-required="true" />
+                        <ValidationMessage For="() => Input.Password" class="text-danger small" />
+                    </div>
+                </div>
+                <div>
+                    <span class="error-message text-danger">@errorMessage</span>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? errorMessage;
+
+    [SupplyParameterFromForm]
+    UserLoginViewModel Input { get; set; } = new UserLoginViewModel();
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private async Task Authenticate()
+    {
+        User? userFromInput = UserDAO.GetInstance().GetById(int.Parse(Input.Id));
+        if (userFromInput == null)
+        {
+            errorMessage = "User not found.";
+            return;
+        }
+		if (userFromInput.Password != Input.Password)
+		{
+			errorMessage = "Invalid password.";
+			return;
+		}
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, userFromInput.Id.ToString())
+        };
+
+		var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+		var principal = new ClaimsPrincipal(identity);
+		await HttpContext.SignInAsync(principal);
+
+		navigationManager.NavigateTo("/sets");
+	}
+
+    sealed class UserLoginViewModel
+    {
+        [Required(ErrorMessage="Please provide a numerical Id.")]
+        [RegularExpression("^[0-9]+$", ErrorMessage = "Id must be a numerical value.")]
+        public string Id { get; set; }
+
+        [Required(AllowEmptyStrings=false, ErrorMessage="Wrong password.")]
+        public string Password { get; set; }
+    }
+}

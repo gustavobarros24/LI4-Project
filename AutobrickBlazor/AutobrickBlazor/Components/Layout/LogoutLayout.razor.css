@@ -1,0 +1,26 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    background-color: #D2E6F4;
+}
+
+.content-wrapper {
+    background-color: white;
+    width: 100%;
+    max-height: 800px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,67 @@
+﻿@page "/pieces/editstock"
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+@using Models
+@using DataAccess
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit Stock</PageTitle>
+
+<h1>Edit Stock <div class=line></div> </h1>
+
+<button class="btn btn-primary" @onclick="Submit">Submit</button>
+
+@if (pieces.Count() == 0)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">PieceID</th>
+                <th style="width: 10%;">Current Stock</th>
+                <th style="width: 40%;">Name</th>
+                <th style="width: 20%;">New Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var piece in pieces)
+            {
+                <tr>
+                    <td>@piece.Id.ToString()</td>
+                    <td>@($"x{piece.AmountInStock.ToString()}")</td>
+                    <td>@piece.Name.ToString()</td>
+                    <td><input type="number" min="0" class="form-control" @bind-value="pieceIdEditedStock[piece.Id]" @bind-value:event="oninput"></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Piece> pieces = new();
+    private Dictionary<int, int> pieceIdEditedStock = new();
+
+    private void Submit()
+    {
+        PieceDAO.GetInstance().EditStock(pieceIdEditedStock);
+        NavigationManager.NavigateTo("/pieces");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        pieces = PieceDAO.GetInstance().GetAll()
+            .OrderBy(piece => piece.Id)
+            .ToList();
+
+        // Initialize dictionary with default values from AmountInStock
+        foreach (var piece in pieces)
+        {
+            pieceIdEditedStock[piece.Id] = piece.AmountInStock;
+        }
+    }
+}

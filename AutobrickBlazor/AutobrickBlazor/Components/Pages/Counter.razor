@@ -1,0 +1,85 @@
+﻿@page "/counter"
+@rendermode InteractiveServer
+
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+@if (user != null)
+{
+    <p>Logged in as: @user.Identity.Name</p>
+}
+else
+{
+    <p>No user is logged in.</p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Value</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var value in values)
+        {
+            <tr>
+                <td>@value</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => IncrementCountBy(value)">
+                        Increment by @value
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button class="btn btn-secondary" @onclick="ResetCounter">Reset Counter</button>
+
+@code {
+    private ClaimsPrincipal? user;
+    private int? userNameAsInt; // Nullable to handle cases where parsing fails or no user is logged in
+    private int currentCount = 0;
+    private List<int> values = Enumerable.Range(1, 10).ToList(); // List of integers from 1 to 10
+
+    private void IncrementCount() { currentCount++; }
+
+    private void IncrementCountBy(int value)
+    {
+        currentCount += value;
+    }
+
+    private void ResetCounter()
+    {
+        currentCount = 0;
+    }
+
+    private async Task GetAuthUserAsync()
+    {
+        // Get the current authentication state
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        // Try to parse the username as an integer
+        if (user?.Identity?.IsAuthenticated == true && int.TryParse(user.Identity.Name, out var userId))
+        {
+            userNameAsInt = userId;
+        }
+        else
+        {
+            userNameAsInt = null; // Set to null if parsing fails or user is not authenticated
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAuthUserAsync();
+    }
+}
